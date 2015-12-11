@@ -3,9 +3,6 @@ import { existsSync } from 'fs'
 import { readJsonSync } from 'fs-extra'
 import HtmlPlugin from '@urban/webpack-html-plugin'
 import getHtml from './get-html'
-import evaluate from 'eval'
-import React from 'react'
-import DomServer from 'react-dom/server'
 
 export const PORT = process.env.PORT || 3000
 export const PUBLIC_URL = process.env.PUBLIC_URL || `http://localhost:${PORT}/`
@@ -15,7 +12,7 @@ const packagePath = join(packageRoot, 'package.json')
 
 const hasPackage = existsSync(packagePath)
 if (!hasPackage) {
-  console.error(`File ${packageJson} does not exist.`)
+  console.error(`File ${packagePath} does not exist.`)
   process.exit(1)
 }
 

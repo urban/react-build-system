@@ -9,7 +9,6 @@ import WebpackDevMiddleware from 'webpack-dev-middleware'
 import WebpackHotMiddleware from 'webpack-hot-middleware'
 
 function serve (args) {
-
   const { config: userConfig } = args
   const config = merge(
     getConfig(defaultConfig, true),
@@ -18,6 +17,7 @@ function serve (args) {
       ...(userConfig && require(userConfig))
     }
   )
+
   config.entry = [
     require.resolve('webpack-hot-middleware/client'),
     config.entry
@@ -27,17 +27,17 @@ function serve (args) {
   const compiler = webpack(config)
 
   const serverOptions = {
-      contentBase,
-      publicPath,
-      stats: {
-        colors: true,
-        hash: false,
-        timings: true,
-        chunks: false,
-        chunkModules: false,
-        modules: false
-      }
+    contentBase,
+    publicPath,
+    stats: {
+      colors: true,
+      hash: false,
+      timings: true,
+      chunks: false,
+      chunkModules: false,
+      modules: false
     }
+  }
   const middleware = WebpackDevMiddleware(compiler, serverOptions)
 
   const app = express()

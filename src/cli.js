@@ -7,7 +7,7 @@ import { version } from '../package'
 import help from './help'
 import Commands from '.'
 
-function getConfig({ config }) {
+function getConfig ({ config }) {
   return isAbsolute(config) ? config : join(process.cwd(), config)
 }
 
