@@ -14,11 +14,11 @@ export default function customTemplate (assets) {
 <html>
   <head>
     <title>${data.title}</title>
-    <link rel="stylesheet" href="/${data.css}"/>
+    <link rel="stylesheet" href="${data.css}"/>
   </head>
   <body>
     <div id="root">${data.html}</div>
-    <script src="/${data.main}"></script>
+    <script src="${data.main}"></script>
   </body>
 </html>`
 )
