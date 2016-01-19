@@ -2,6 +2,7 @@
 import { join } from 'path'
 import defaultConfig, { PORT, PUBLIC_URL } from './default-config'
 import getConfig from '@urban/webpack-config'
+import getEntry from '@urban/webpack-config/lib/get-entry'
 import webpack from 'webpack'
 import merge from 'webpack-merge'
 import express from 'express'
@@ -19,10 +20,12 @@ function serve (args) {
     }
   )
 
-  config.entry = [
-    require.resolve('webpack-hot-middleware/client'),
-    config.entry
-  ]
+  config.entry = getEntry(config.entry, ['webpack-hot-middleware/client'])
+
+  // config.entry = [
+  //   require.resolve('webpack-hot-middleware/client'),
+  //   config.entry
+  // ]
 
   const { output: { path: contentBase, publicPath } } = config
   const compiler = webpack(config)
