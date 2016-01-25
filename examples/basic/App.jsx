@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 
-const Hello = ({
-  message = 'world'
+const App = ({
+  message
 }) => (
-  <div>Hello {message} and Urban!</div>
+  <div>Hello {message} and welcome!</div>
 )
 
-export default Hello
+App.propTypes = {
+  message: PropTypes.string
+}
+
+export default App

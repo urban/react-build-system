@@ -1,34 +1,29 @@
 /* @flow */
-import { join } from 'path'
-import defaultConfig, { PORT, PUBLIC_URL } from './default-config'
+import defaultConfig from './default-config'
 import getConfig from '@urban/webpack-config'
-import getEntry from '@urban/webpack-config/lib/get-entry'
 import webpack from 'webpack'
 import merge from 'webpack-merge'
+import { exit, log } from './cli-helper'
 
-function build (args) {
-  const { config: userConfig } = args
+export default function build ({ config: userConfig }) {
   const config = merge(
     getConfig(defaultConfig),
     {
       output: { publicPath: '' },
-      devTools: 'inline-source-map',
-      ...(userConfig && require(userConfig))
-    }
+      devTools: 'inline-source-map'
+    },
+    userConfig
   )
 
-  const { output: { path: contentBase, publicPath } } = config
   const compiler = webpack(config)
-
 
   compiler.run((err, stats) => {
     if (err) {
-      console.error('Build Error:', err)
-      return
+      log('Build Error:', err)
+      exit(1)
     }
-    console.log('Build success!')
+
+    log('Build success!')
+    exit(0)
   })
-
 }
-
-export default build

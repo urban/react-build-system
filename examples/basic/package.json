@@ -4,7 +4,7 @@
   "scripts": {
     "clean": "rm -rf dist",
     "build": "npm run clean && rbs build",
-    "start": "rbs server"
+    "start": "rbs serve"
   },
   "dependencies": {
     "react": "0.14.3",

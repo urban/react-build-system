@@ -2,46 +2,33 @@
 
 /* @flow */
 import { join, isAbsolute } from 'path'
-import minimist from 'minimist'
-import { version } from '../package'
-import help from './help'
-import Commands from '.'
+import commands from './commands'
+import readPackage from './read-package'
+import { exit, log, parseArgs } from './cli-helper'
+import { compose, evolve, has } from 'ramda'
 
-function getConfig ({ config }) {
-  return isAbsolute(config) ? config : join(process.cwd(), config)
-}
+const absolutePath = x => isAbsolute(x) ? x : join(process.cwd(), x)
 
 function cli (argv: Array = []): void {
-  const args = minimist(argv, {
-    boolean: ['help', 'version'],
-    string: ['config'],
-    alias: {
-      h: 'help',
-      V: 'version'
-    }
-  })
+  const { command, help, input } = parseArgs(argv)
 
-  if (args.help) {
-    return console.log(help)
+  if (command === undefined) {
+    log('No command found.')
+    exit(1)
   }
 
-  if (args.version) {
-    return console.log(version)
+  if (!has(command, commands)) {
+    log(`Invalid command: ${command}.`)
+    log(help)
+    exit(1)
   }
 
-  const command = argv[0]
-  if (!command) {
-    console.error('No command found.')
-    process.exit(1)
+  const transformations = {
+    config: compose(readPackage, absolutePath)
   }
-  if (!Commands.hasOwnProperty(command)) {
-    console.error(`Invalid command: ${command}.`)
-    console.log(help)
-    process.exit(1)
-  }
-  Commands[command]({
-    config: getConfig(args)
-  })
+  const options = evolve(transformations, input)
+
+  commands[command](options)
 }
 
 if (!module.parent) {

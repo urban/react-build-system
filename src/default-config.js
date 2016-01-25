@@ -3,21 +3,17 @@ import { existsSync } from 'fs'
 import { readJsonSync } from 'fs-extra'
 import HtmlPlugin from '@urban/webpack-html-plugin'
 import getHtml from './get-html'
+import babelConfig from './babel-config'
+import readPackage from './read-package'
+import { exit, log } from './cli-helper'
 
 export const PORT = process.env.PORT || 3000
 export const PUBLIC_URL = process.env.PUBLIC_URL || `http://localhost:${PORT}/`
 
 const packageRoot = resolve('.')
-const packagePath = join(packageRoot, 'package.json')
 
-const hasPackage = existsSync(packagePath)
-if (!hasPackage) {
-  console.error(`File ${packagePath} does not exist.`)
-  process.exit(1)
-}
-
-const { main } = readJsonSync(packagePath)
-const outputDir = join(resolve('.'), 'dist')
+const { main } = readPackage(join(packageRoot, 'package.json'))
+const outputDir = join(packageRoot, 'dist')
 
 const config = {
   context: process.cwd(),
@@ -33,25 +29,7 @@ const config = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         include: process.cwd(),
-        query: {
-          presets: [
-            require.resolve('babel-preset-es2015'),
-            require.resolve('babel-preset-stage-0'),
-            require.resolve('babel-preset-react')
-          ],
-          plugins: [
-            [require.resolve('babel-plugin-react-transform'), {
-              transforms: [{
-                transform: require.resolve('react-transform-hmr'),
-                imports: ['react'],
-                locals: ['module']
-              }, {
-                transform: require.resolve('react-transform-catch-errors'),
-                imports: ['react', require.resolve('redbox-react')]
-              }]
-            }]
-          ]
-        }
+        query: babelConfig
       }
     ]
   },
