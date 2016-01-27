@@ -1,21 +1,30 @@
-/* @flow */
-import defaultConfig, { PORT, PUBLIC_URL } from './default-config'
+import getDefaultConfig, { PORT, PUBLIC_URL } from '../get-default-config'
 import getConfig from '@urban/webpack-config'
 import getEntry from '@urban/webpack-config/lib/get-entry'
 import webpack from 'webpack'
 import merge from 'webpack-merge'
-import { exit, log } from './cli-helper'
+import { exit, log } from '../cli-helper'
 import express from 'express'
 import historyApiFallback from 'connect-history-api-fallback'
 import WebpackDevMiddleware from 'webpack-dev-middleware'
 import WebpackHotMiddleware from 'webpack-hot-middleware'
 
-function serve ({ config: userConfig }) {
+const error = (err: string): void => {
+  log(err)
+  exit(1)
+}
+
+const success = (): void => {
+  log(`Server started at ${PUBLIC_URL}`)
+}
+
+function serve ({ config: userConfig }: { config: Object }): void {
+  const serverConfig = {
+    devTools: 'eval'
+  }
   const config = merge(
-    getConfig(defaultConfig, true),
-    {
-      devTools: 'eval'
-    },
+    getConfig(getDefaultConfig(), true),
+    serverConfig,
     userConfig
   )
 
@@ -44,11 +53,8 @@ function serve ({ config: userConfig }) {
   app.use(WebpackDevMiddleware(compiler, serverOptions))
   app.use(WebpackHotMiddleware(compiler))
   app.listen(PORT, (err, result) => {
-    if (err) {
-      log(err)
-      exit(1)
-    }
-    log(`Server started at ${PUBLIC_URL}`)
+    if (err) error(err)
+    success()
   })
 }
 

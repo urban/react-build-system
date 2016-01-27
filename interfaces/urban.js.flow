@@ -1,0 +1,13 @@
+declare module '@urban/webpack-html-plugin' {
+  declare class exports {
+    constructor(x: Function): void
+  }
+}
+
+declare module '@urban/webpack-config' {
+  declare function exports(config: Object, isHot: ?boolean): Object
+}
+
+declare module '@urban/webpack-config/lib/get-entry' {
+  declare function exports(entry: string | Object | Array<string>, entries: Array<string>): Object
+}

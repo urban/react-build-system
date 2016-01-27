@@ -1,0 +1,3 @@
+declare module 'fs-extra' {
+  declare function readJsonSync(path: string): Object
+}

@@ -1,4 +1,5 @@
-export default {
+/* @flow */
+const getBabelConfig = (): Object => ({
   presets: [
     require.resolve('babel-preset-es2015'),
     require.resolve('babel-preset-stage-0'),
@@ -16,4 +17,6 @@ export default {
       }]
     }]
   ]
-}
+})
+
+export default getBabelConfig

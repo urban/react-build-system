@@ -1,6 +1,6 @@
 /* @flow */
 
-export default function customTemplate (assets) {
+export default function customTemplate (assets: Object): string {
   const data = {
     charset: 'utf-8',
     title: 'RBS Template',

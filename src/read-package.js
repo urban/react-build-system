@@ -1,13 +1,15 @@
-import { join, resolve } from 'path'
+/* @flow */
+
 import { existsSync } from 'fs'
 import { readJsonSync } from 'fs-extra'
 import { exit, log } from './cli-helper'
 
-export default function readPackage (path) {
-  if (!existsSync(path)) {
-    log(`File ${path} does not exist.`)
-    exit(1)
-  }
+const noFile = (path) => {
+  log(`File ${path} does not exist.`)
+  exit(1)
+}
 
+export default function readPackage (path: string): Object {
+  if (!existsSync(path)) noFile(path)
   return readJsonSync(path)
 }

@@ -1,34 +1,59 @@
 #! /usr/bin/env node
-
 /* @flow */
+
 import { join, isAbsolute } from 'path'
-import commands from './commands'
 import readPackage from './read-package'
 import { exit, log, parseArgs } from './cli-helper'
-import { compose, evolve, has } from 'ramda'
+import { version } from '../package'
+import help from './help'
+import { compose, evolve, has, isNil } from 'ramda'
 
 const absolutePath = x => isAbsolute(x) ? x : join(process.cwd(), x)
 
-function cli (argv: Array = []): void {
-  const { command, help, input } = parseArgs(argv)
+const noCommand = () => {
+  log('No command found.')
+  exit(1)
+}
 
-  if (command === undefined) {
-    log('No command found.')
-    exit(1)
-  }
+const unknownCommand = (command) => {
+  log(`Invalid command: ${command}.`)
+  log(help)
+  exit(1)
+}
 
-  if (!has(command, commands)) {
-    log(`Invalid command: ${command}.`)
-    log(help)
-    exit(1)
-  }
+const showHelp = () => {
+  log(help)
+  exit(0)
+}
+const showVersion = () => {
+  log(version)
+  exit(0)
+}
+
+function cli (argv: ?Array<string>): void {
+  const { command, input, hasHelp, hasVersion } = parseArgs(argv || [])
+
+  if (hasHelp) showHelp()
+  if (hasVersion) showVersion()
+  if (isNil(command)) noCommand()
 
   const transformations = {
     config: compose(readPackage, absolutePath)
   }
   const options = evolve(transformations, input)
 
-  commands[command](options)
+  let commandPath
+  try {
+    commandPath = require.resolve(`./commands/${command}`)
+  } catch (e) {
+    unknownCommand(command)
+  }
+
+  // $FlowFixMe: suppressing this error until...
+  const commandModule = require(commandPath)
+  has('default', commandModule)
+    ? commandModule.default(options)
+    : commandModule(options)
 }
 
 if (!module.parent) {
