@@ -2,17 +2,7 @@ import getDefaultConfig from '../get-default-config'
 import getConfig from '@urban/webpack-config'
 import webpack from 'webpack'
 import merge from 'webpack-merge'
-import { exit, log } from '../cli-helper'
-
-const error = (err): void => {
-  log('Build Error:', err)
-  exit(1)
-}
-
-const success = (): void => {
-  log('Build success!')
-  exit(0)
-}
+import { fatal, success } from '../logger'
 
 export default function build ({ config: userConfig }: { config: Object }): void {
   const buildConfig = {
@@ -27,7 +17,9 @@ export default function build ({ config: userConfig }: { config: Object }): void
   const compiler = webpack(config)
 
   compiler.run((err, stats) => {
-    if (err) error(err)
-    success()
+    if (err) {
+      fatal(`Build error: ${err}`)
+    }
+    success('Build success!')
   })
 }

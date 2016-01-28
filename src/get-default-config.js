@@ -10,6 +10,8 @@ export const PUBLIC_URL = process.env.PUBLIC_URL || `http://localhost:${PORT}/`
 
 const getDefaultConfig = (): Object => {
   const root = resolve('.')
+  // Flow wants a string literal
+  // $FlowFixMe
   const { main } = require(join(root, 'package'))
 
   const config = {
