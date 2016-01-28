@@ -1,6 +1,6 @@
 {
   "name": "basic",
-  "main": "index.jsx",
+  "main": "index.js",
   "scripts": {
     "clean": "rm -rf dist",
     "build": "npm run clean && rbs build",
