@@ -1,5 +1,5 @@
 /* @flow */
-import { red  } from 'chalk'
+import { red } from 'chalk'
 
 export const transports = {
   stdout: process.stdout,
