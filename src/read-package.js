@@ -1,12 +1,12 @@
 /* @flow */
 
-import { existsSync } from 'fs'
-import { readJsonSync } from 'fs-extra'
 import { fatal } from './logger'
 
-export default function readPackage (path: string): Object {
-  if (!existsSync(path)) {
+export default function readPackage (path: string): any {
+  try {
+    // $FlowFixMe: suppressing this error until...
+    return require(path)
+  } catch (e) {
     fatal(`File ${path} does not exist.`)
   }
-  return readJsonSync(path)
 }
