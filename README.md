@@ -29,8 +29,8 @@ Common commands:
 
 ## Related
 
-- [@urban/webpack-config](https://github.com/urban/webpack-config)
-- [@urban/webpack-html-plugin](https://github.com/urban/webpack-html-plugin)
+- [@urban/webpack-config](https://github.com/urban/webpack-config) - An opinionated webpack config.
+- [@urban/webpack-html-plugin](https://github.com/urban/webpack-html-plugin) - A webpack plugin that renders HTML files.
 
 
 ## License
